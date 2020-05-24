@@ -76,6 +76,7 @@ public class Packet {
         for (int i = 0; i < bytes; i++)
             t.add(buffer[i]);
         for (List<Byte> x : Frame.frameDeEscaping(t)) {
+            DataDumpUtils.logTransportLayerPacket(x, "Packet.handleRawData");
             byte[] xx = new byte[x.size()];
             for (int i = 0; i < x.size(); i++)
                 xx[i] = x.get(i);

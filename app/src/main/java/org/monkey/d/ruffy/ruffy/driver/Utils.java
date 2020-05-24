@@ -238,6 +238,15 @@ public class Utils {
         }
         return sb.toString();
     }
+
+    public static String byteArrayToHexStringWithOffset(byte[] buffer, int bytes, int offset) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = offset; i < bytes; i++) {
+            sb.append(String.format("%02X ", buffer[i]));
+        }
+        return sb.toString();
+    }
+
     public static byte[] hexStringToByteArray(String s) {
         s = s.replaceAll(" ","");
         int len = s.length();

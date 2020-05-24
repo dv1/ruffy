@@ -44,6 +44,8 @@ public class Application {
     private static void sendData(ByteBuffer payload, boolean reliable,BTConnection btConn)  {
         btConn.getPumpData().incrementNonceTx();
 
+        DataDumpUtils.logApplicationLayerPacket(payload, "Application.sendData");
+
         byte[] sendR = {16,3,0,0,0};
 
         List<Byte> packet  = Packet.buildPacket(sendR, payload, true,btConn);					//Add the payload, set the address if valid
@@ -282,6 +284,8 @@ public class Application {
         handler.log("processing app response");
         ByteBuffer b = ByteBuffer.wrap(payload);
         b.order(ByteOrder.LITTLE_ENDIAN);
+
+        DataDumpUtils.logApplicationLayerPacket(b, "Application.processAppResponse");
 
         b.get();//ignore
         byte servId = b.get();

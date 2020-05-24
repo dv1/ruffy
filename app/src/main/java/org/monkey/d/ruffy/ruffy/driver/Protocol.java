@@ -25,6 +25,7 @@ public class Protocol {
         List<Byte> packet = Packet.buildPacket(p_s, null, true, btConn);							//Use real address (gathered in Key Response)
         packet = Utils.ccmAuthenticate(packet, btConn.getPumpData().getToPumpKey(), btConn.getPumpData().getNonceTx());			//Add U-MAC (Use D->P key)
 
+        DataDumpUtils.logTransportLayerPacket(packet, "Protocol.sendSyn");
         List<Byte> temp = Frame.frameEscape(packet);
         byte[] ro = new byte[temp.size()];
         int i = 0;
@@ -67,6 +68,7 @@ public class Protocol {
         List<Byte> packet = Packet.buildPacket(p_r, ids, true,btConn);							//Use real address (gathered in Key Response)
         packet = Utils.ccmAuthenticate(packet, btConn.getPumpData().getToPumpKey(), btConn.getPumpData().getNonceTx());			//Add U-MAC (Use D->P key)
 
+        DataDumpUtils.logTransportLayerPacket(packet, "Protocol.sendIDReq");
         List<Byte> temp = Frame.frameEscape(packet);
         byte[] ro = new byte[temp.size()];
         int i = 0;
@@ -85,6 +87,7 @@ public class Protocol {
 
         packet = Utils.ccmAuthenticate(packet, btConn.getPumpData().getToPumpKey(), btConn.getPumpData().getNonceTx());
 
+        DataDumpUtils.logTransportLayerPacket(packet, "Protocol.sendAck");
         List<Byte> temp = Frame.frameEscape(packet);
         byte[] ro = new byte[temp.size()];
         int i = 0;

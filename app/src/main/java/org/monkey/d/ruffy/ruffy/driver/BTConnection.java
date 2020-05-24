@@ -47,6 +47,7 @@ public class BTConnection {
     }
 
     public void makeDiscoverable(Activity activity) {
+        Log.v("RUFFY_LOG", "Starting discoverable mode");
 
         this.pumpData = new PumpData(activity);
 
@@ -79,6 +80,8 @@ public class BTConnection {
     }
 
     public void stopDiscoverable() {
+        Log.v("RUFFY_LOG", "Stopping discoverable mode");
+
         if(listen!=null)
         {
             listen.halt();
@@ -187,6 +190,9 @@ public class BTConnection {
                     try {
                         int bytes = currentInput.read(buffer);
                         handler.log("read "+bytes+": "+ Utils.byteArrayToHexString(buffer,bytes));
+
+                        DataDumpUtils.writeFrameData(false, buffer, bytes);
+
                         handler.handleRawData(buffer,bytes);
                     } catch (Exception e) {
                         //e.printStackTrace();
@@ -206,6 +212,8 @@ public class BTConnection {
         for (Byte n : pumpData.getNonceTx())
             out.add(n);
         Utils.addCRC(out);
+
+        DataDumpUtils.logTransportLayerPacket(out, "BTConnection.writeCommand");
 
         List<Byte> temp = Frame.frameEscape(out);
 
@@ -257,6 +265,7 @@ public class BTConnection {
             return;
         }
         try {
+            DataDumpUtils.writeFrameData(true, ro, ro.length);
             currentOutput.write(ro);
             handler.log("wrote "+ro.length+" bytes: "+ Utils.byteArrayToHexString(ro,ro.length));
         }catch(Exception e)

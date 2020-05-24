@@ -1,10 +1,15 @@
 package org.monkey.d.ruffy.ruffy;
 
+import android.Manifest;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class Start extends FragmentActivity {
 
@@ -13,6 +18,8 @@ public class Start extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_start);
+
+        checkExternalStoragePermission();
 
         getSupportFragmentManager().beginTransaction().add(R.id.container,new MainFragment()).commit();
 
@@ -43,5 +50,25 @@ public class Start extends FragmentActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private static final int EXTERNAL_STORAGE_REQUEST = 100;
+
+    private void checkExternalStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, EXTERNAL_STORAGE_REQUEST);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case EXTERNAL_STORAGE_REQUEST: {
+                if ((grantResults.length == 0) || (grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
+                    Toast.makeText(this, "External storage permission is required in order to produce binary data dumps", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
     }
 }
